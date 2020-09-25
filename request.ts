@@ -16,7 +16,7 @@ export class Request {
     }
 
     get jsonBody() {
-        return JSON.parse(this.body)
+        return this.body ? JSON.parse(this.body): {}
     }
 
     get contentLength() {
@@ -32,6 +32,7 @@ export class Request {
     }
 
     get url() {
+        this.denoRequest.
         return this.denoRequest.url
     }
 
