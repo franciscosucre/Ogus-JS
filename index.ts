@@ -24,7 +24,9 @@ server.use(async (req, res, next) => {
     next ? await next() : null
 })
 
-const router = new Router().get('/user/:id/', (req, res) => {
+const router = new Router().use((req, res, next) => {
+    console.log('i am a route middleware')
+}).get('/user/:id/', (req, res) => {
     res.json({
         id: req.params.id
     })

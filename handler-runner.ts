@@ -7,15 +7,14 @@ export type Handler = (req: Request, res: Response, next?: NextFunction) => any
 export interface HandlerRunner {
     readonly handlers: Handler[];
 
-    new (handlers: Handler[]): HandlerRunner;
+    run(req: Request, res: Response): Promise<any>
 
-    run(req: Request, res: Response): any
-
-
+    new(handlers: Handler[]): HandlerRunner;
 }
 
+// @ts-ignore
 export class DefaultHandlerRunner implements HandlerRunner {
-    readonly handlers: Handler[]
+    readonly handlers: Handler[];
 
     constructor(handlers: Handler[]) {
         this.handlers = handlers

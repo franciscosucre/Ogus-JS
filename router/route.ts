@@ -1,6 +1,7 @@
-import {DefaultHandlerRunner, Handler} from "../core.ts";
+import {Handler} from "../handler-runner.ts";
 import {Request} from '../request.ts'
 import {Response} from '../response.ts'
+import {DefaultMiddlewareEngine, MiddlewareEngine} from "../behaviors/middleware-engine.ts";
 
 
 export function normalize_uri(uri: string) {
@@ -16,17 +17,16 @@ export function normalize_uri(uri: string) {
 export type Params = { [key in string]: string }
 
 export class Route {
-    method: string;
-    handlers: Handler[];
-    uri: string;
-    segments: string[];
-    private readonly HandlerRunnerClass = DefaultHandlerRunner
+    public method: string;
+    public uri: string;
+    private readonly  segments: string[];
+    private readonly  middlewareEngine: MiddlewareEngine = new DefaultMiddlewareEngine();
 
     constructor(method: string, path: string, handlers: Handler[]) {
-        this.handlers = handlers;
         this.method = method;
         this.uri = normalize_uri(path);
         this.segments = this.uri.split("/");
+        this.middlewareEngine.useMiddleware(...handlers)
     }
 
     private match(method: string, segments: string[]): { params: Params; route: Route } | null {
@@ -55,11 +55,11 @@ export class Route {
     }
 
     addHandlers(handlers: Handler[]) {
-        this.handlers.push(...handlers)
+        const [first, ...rest] = handlers
+        this.middlewareEngine.useMiddleware(first, ...rest)
     }
 
     async handle(req: Request, res: Response) {
-        const runner = new this.HandlerRunnerClass(this.handlers)
-        await runner.run(req, res)
+        await this.middlewareEngine.run(req, res)
     }
 }
