@@ -1,4 +1,4 @@
-import {HTTPOptions, serve, Server as DenoServer} from "https://deno.land/std/http/server.ts";
+import {HTTPOptions, serve, Server} from "https://deno.land/std/http/server.ts";
 
 import {Request} from './request.ts'
 import {Response} from './response.ts'
@@ -8,7 +8,7 @@ import {Handler, NextFunction} from "./core.ts";
 
 export class Application {
     private middlewareEngine: MiddlewareEngine = new DefaultMiddlewareEngine()
-    private denoServer: DenoServer;
+    private denoServer: Server;
 
     constructor(options: Partial<HTTPOptions> = {}) {
         const {hostname = "0.0.0.0", port = 8000} = options
