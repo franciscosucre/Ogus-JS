@@ -1,4 +1,5 @@
 import {Application} from './application.ts';
+import {Router} from "./router/router.ts";
 
 const server = new Application({port: 8000, hostname: "0.0.0.0"})
 
@@ -23,11 +24,18 @@ server.use(async (req, res, next) => {
     next ? await next() : null
 })
 
-await server.listen((req, res) => {
-    console.log("listener!")
-    if (/error/i.test(req.url)) {
-        throw new Error("ERROR")
+const router = new Router().get('/user/:id/', (req, res) => {
+    res.json({
+        id: req.params.id
+    })
+})
+
+await server.listen(async (req, res) => {
+    const match = router.match(req.method, req.url)
+    if (!match) {
+        throw new Error("Route not found")
     }
-    const {body, url, contentLength, headers, method} = req
-    res.status(201).json({body, url, contentLength, headers, method})
+    const {route, params} = match
+    req.params = params
+    await route.handle(req, res)
 })

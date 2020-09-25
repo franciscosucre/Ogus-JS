@@ -1,9 +1,12 @@
 import {ServerRequest} from "https://deno.land/std/http/server.ts";
 import {decode} from "https://deno.land/std/encoding/utf8.ts";
 
+import {  } from "https://deno.land/std/path/mod.ts";
 
 export class Request {
     public readonly denoRequest: ServerRequest;
+    // Free property to be used for routers
+    public params: {[key in string]: any} = {}
     public body: string = '';
 
 

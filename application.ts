@@ -3,12 +3,13 @@ import {HTTPOptions, serve, Server} from "https://deno.land/std/http/server.ts";
 import {Request} from './request.ts'
 import {Response} from './response.ts'
 import {DefaultMiddlewareEngine, MiddlewareEngine} from './behaviors/middleware-engine.ts'
-import {Handler, NextFunction} from "./core.ts";
+import {DefaultHandlerRunner, Handler, NextFunction} from "./core.ts";
 
 
 export class Application {
     private readonly middlewareEngine: MiddlewareEngine = new DefaultMiddlewareEngine()
     private readonly denoServer: Server;
+    private readonly HandlerRunnerClass = DefaultHandlerRunner
 
     constructor(options: Partial<HTTPOptions> = {}) {
         const {hostname = "0.0.0.0", port = 8000} = options
@@ -28,27 +29,13 @@ export class Application {
                 const response = new Response({request})
 
                 const queue = this.middlewareEngine.createQueue(callback ? [callback] : [])
-                await this.runHandlers(request, response, queue)
+                const handlerRunner = new this.HandlerRunnerClass(queue)
+                await handlerRunner.run(request, response)
             }
         } catch (e) {
             console.error("Unhandled Error: ", e)
         }
 
-    }
-
-    private async runHandlers(req: Request, res: Response, handlers: Handler[]) {
-        let idx = 0;
-        if (handlers.length === 0) {
-            return
-        }
-        const next: NextFunction = async (): Promise<void> => {
-            if (idx >= handlers.length) {
-                return
-            }
-            const layer = handlers[idx++];
-            await layer(req, res, next);
-        };
-        await next();
     }
 }
 
