@@ -32,7 +32,6 @@ export class Request {
     }
 
     get url() {
-        this.denoRequest.
         return this.denoRequest.url
     }
 
