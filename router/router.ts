@@ -1,4 +1,6 @@
 import {Route} from "./route.ts";
+import {Request} from "../request.ts";
+import {Response} from "../response.ts";
 import {Handler} from "../handler-runner.ts";
 
 export class Router {
@@ -24,35 +26,45 @@ export class Router {
     }
 
     get(uri: string, handler: Handler, ...otherHandlers: Handler[]) {
-        return this.addRoute('get', uri, handler, ...otherHandlers)
+        return this.addRoute('GET', uri, handler, ...otherHandlers)
     }
 
     post(uri: string, handler: Handler, ...otherHandlers: Handler[]) {
-        return this.addRoute('post', uri, handler, ...otherHandlers)
+        return this.addRoute('POST', uri, handler, ...otherHandlers)
     }
 
     patch(uri: string, handler: Handler, ...otherHandlers: Handler[]) {
-        return this.addRoute('patch', uri, handler, ...otherHandlers)
+        return this.addRoute('PATCH', uri, handler, ...otherHandlers)
     }
 
     put(uri: string, handler: Handler, ...otherHandlers: Handler[]) {
-        return this.addRoute('put', uri, handler, ...otherHandlers)
+        return this.addRoute('PUT', uri, handler, ...otherHandlers)
     }
 
     delete(uri: string, handler: Handler, ...otherHandlers: Handler[]) {
-        return this.addRoute('delete', uri, handler, ...otherHandlers)
+        return this.addRoute('DELETE', uri, handler, ...otherHandlers)
     }
 
     options(uri: string, handler: Handler, ...otherHandlers: Handler[]) {
-        return this.addRoute('options', uri, handler, ...otherHandlers)
+        return this.addRoute('OPTIONS', uri, handler, ...otherHandlers)
     }
 
     head(uri: string, handler: Handler, ...otherHandlers: Handler[]) {
-        return this.addRoute('head', uri, handler, ...otherHandlers)
+        return this.addRoute('HEAD', uri, handler, ...otherHandlers)
     }
 
     match(method: string, uri: string) {
         return this.routes.map(r => r.matchByPath(method, uri)).find(r => r)
+    }
+
+    async handle(req: Request, res: Response) {
+        const match = this.match(req.method, req.url)
+        if (!match) {
+            throw new Error("Route not found")
+        }
+        const {route, params} = match
+        req.params = params
+        await route.handle(req, res)
     }
 
 }

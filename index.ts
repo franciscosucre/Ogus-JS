@@ -1,7 +1,11 @@
 import {Application} from './application.ts';
 import {Router} from "./router/router.ts";
 
-const server = new Application({port: 8000, hostname: "0.0.0.0"})
+const server = new Application({
+    port: 8000,
+    hostname: "0.0.0.0",
+    requestHandler: async (req, res) => router.handle(req, res)
+})
 
 server.use(async (req, res, next) => {
     try {
@@ -32,12 +36,6 @@ const router = new Router().use((req, res, next) => {
     })
 })
 
-await server.listen(async (req, res) => {
-    const match = router.match(req.method, req.url)
-    if (!match) {
-        throw new Error("Route not found")
-    }
-    const {route, params} = match
-    req.params = params
-    await route.handle(req, res)
+await server.listen(() => {
+    console.log(`Listening on http://${server.hostname}:${server.port}`)
 })
