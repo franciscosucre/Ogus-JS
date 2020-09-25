@@ -7,8 +7,8 @@ import {Handler, NextFunction} from "./core.ts";
 
 
 export class Application {
-    private middlewareEngine: MiddlewareEngine = new DefaultMiddlewareEngine()
-    private denoServer: Server;
+    private readonly middlewareEngine: MiddlewareEngine = new DefaultMiddlewareEngine()
+    private readonly denoServer: Server;
 
     constructor(options: Partial<HTTPOptions> = {}) {
         const {hostname = "0.0.0.0", port = 8000} = options
