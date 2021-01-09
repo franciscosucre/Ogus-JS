@@ -4,7 +4,7 @@ import {Router} from "./router/router.ts";
 const server = new Application({
     port: 8000,
     hostname: "0.0.0.0",
-    requestHandler: async (req, res) => router.handle(req, res)
+    requestHandler: (req, res) => router.handle(req, res)
 })
 
 server.use(async (req, res, next) => {

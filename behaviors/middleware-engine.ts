@@ -6,7 +6,7 @@ import {Response} from '../response.ts'
 export interface MiddlewareEngine {
     useMiddleware(...otherHandlers: Handler[]): MiddlewareEngine
 
-    run(req: Request, res: Response, extraHandlers?: Handler[]): Promise<any>
+    run(req: Request, res: Response, extraHandlers?: Handler[]): Promise<void>
 }
 
 export class DefaultMiddlewareEngine implements MiddlewareEngine {

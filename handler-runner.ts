@@ -1,13 +1,13 @@
 import {Request} from './request.ts';
 import {Response} from './response.ts'
 
-export type NextFunction = () => any;
-export type Handler = (req: Request, res: Response, next?: NextFunction) => any
+export type NextFunction = () => void | Promise<void>;
+export type Handler = (req: Request, res: Response, next?: NextFunction) => void | Promise<void>
 
 export interface HandlerRunner {
     readonly handlers: Handler[];
 
-    run(req: Request, res: Response): Promise<any>
+    run(req: Request, res: Response): Promise<void>
 
     new(handlers: Handler[]): HandlerRunner;
 }
@@ -20,7 +20,7 @@ export class DefaultHandlerRunner implements HandlerRunner {
         this.handlers = handlers
     }
 
-    async run(req: Request, res: Response): Promise<any> {
+    async run(req: Request, res: Response): Promise<void> {
         let idx = 0;
         if (this.handlers.length === 0) {
             return
@@ -35,4 +35,3 @@ export class DefaultHandlerRunner implements HandlerRunner {
         await next();
     }
 }
-

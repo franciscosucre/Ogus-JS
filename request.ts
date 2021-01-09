@@ -6,8 +6,8 @@ import {  } from "https://deno.land/std/path/mod.ts";
 export class Request {
     public readonly denoRequest: ServerRequest;
     // Free property to be used for routers
-    public params: {[key in string]: any} = {}
-    public body: string = '';
+    public params: {[key in string]: unknown} = {}
+    public body = '';
 
 
     constructor({denoRequest}: { denoRequest: ServerRequest }) {
@@ -40,4 +40,3 @@ export class Request {
 
 
 }
-

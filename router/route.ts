@@ -4,7 +4,7 @@ import {Response} from '../response.ts'
 import {DefaultMiddlewareEngine, MiddlewareEngine} from "../behaviors/middleware-engine.ts";
 
 
-export function normalize_uri(uri: string) {
+export function normalizeUri(uri: string) {
     const segments = [""];
     for (const segment of uri.split("/")) {
         if (segment !== "") {
@@ -24,7 +24,7 @@ export class Route {
 
     constructor(method: string, path: string, handlers: Handler[]) {
         this.method = method;
-        this.uri = normalize_uri(path);
+        this.uri = normalizeUri(path);
         this.segments = this.uri.split("/");
         this.middlewareEngine.useMiddleware(...handlers)
     }
@@ -49,7 +49,7 @@ export class Route {
     }
 
     matchByPath(method: string, path: string): { params: Params; route: Route } | null {
-        const uri = normalize_uri(path);
+        const uri = normalizeUri(path);
         const segments = uri.split("/");
         return this.match(method, segments);
     }

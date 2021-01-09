@@ -26,7 +26,7 @@ export class Application {
         return this
     }
 
-    async listen(callback?: () => any) {
+    async listen(callback?: () => void | Promise<void>) {
         callback ? await callback() : null
         try {
             for await (const denoRequest of this.denoServer) {
@@ -41,4 +41,3 @@ export class Application {
 
     }
 }
-
