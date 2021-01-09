@@ -8,11 +8,8 @@ export interface HandlerRunner {
     readonly handlers: Handler[];
 
     run(req: Request, res: Response): Promise<void>
-
-    new(handlers: Handler[]): HandlerRunner;
 }
 
-// @ts-ignore
 export class DefaultHandlerRunner implements HandlerRunner {
     readonly handlers: Handler[];
 
