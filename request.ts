@@ -26,8 +26,8 @@ export class Request {
         return this.getRequest().method
     }
 
-    getUrl() {
-        return this.getRequest().url
+    getUrl(): URL {
+        return new URL(this.getRequest().url)
     }
 
     respond(body: BodyInit, options?: Omit<ResponseInit, 'statusText'>){

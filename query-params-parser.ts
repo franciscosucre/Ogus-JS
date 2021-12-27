@@ -28,8 +28,7 @@ export class QueryParamsParser {
     this.convertors = convertors
   }
 
-  parse(urlString: string) {
-    const url = new URL(urlString);
+  parse(url: URL) {
     const parsedQueryParams: Record<string, Primitives | Primitives[]> = {};
     for (const queryParamTuple of url.searchParams) {
       const [key, value] = queryParamTuple;

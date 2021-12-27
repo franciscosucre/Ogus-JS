@@ -70,12 +70,12 @@ export class Router {
         }
     }
 
-    match(method: string, uri: string) {
-        return this.routes.map(r => r.matchByPath(method, uri)).find(r => r)
+    match(method: string, pathname: string) {
+        return this.routes.map(r => r.matchByPath(method, pathname)).find(r => r)
     }
 
     async handle(req: Request, res: Response) {
-        const match = this.match(req.getMethod(), req.getUrl())
+        const match = this.match(req.getMethod(), req.getUrl().pathname)
         if (!match) {
             throw new Error("Route not found")
         }

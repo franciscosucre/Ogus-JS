@@ -25,7 +25,7 @@ export class Response {
         this.headers.set("content-type", "application/json");
         this.request.respond(this.body, {
             headers: this.headers,
-            status: Number(this.status.toString()),
+            status: Number(this.statusCode.toString()),
         })
         return this
     }

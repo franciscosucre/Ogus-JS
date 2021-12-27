@@ -30,6 +30,7 @@ export class Route {
     }
 
     private match(method: string, segments: string[]): { params: Params; route: Route } | null {
+        console.log(method, segments)
         if (method !== this.method) {
             return null;
         }
@@ -50,7 +51,7 @@ export class Route {
 
     matchByPath(method: string, path: string): { params: Params; route: Route } | null {
         const uri = normalizeUri(path);
-        const segments = uri.split("/");
+        const segments = uri.split("/").map(s => s);
         return this.match(method, segments);
     }
 

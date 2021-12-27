@@ -1,5 +1,9 @@
 import {Application} from './application.ts';
 import {Router} from "./router/router.ts";
+import {
+  Status,
+} from "https://deno.land/std@0.119.0/http/http_status.ts";
+
 
 const server = new Application({
     port: 8000,
@@ -14,7 +18,7 @@ server.use(async (req, res, next) => {
         }
     } catch (e) {
         console.error("An error has been handled", e)
-        res.status(500).json({
+        res.status(Status.InternalServerError).json({
             error: e.message
         })
     }
@@ -30,7 +34,6 @@ server.use(async (req, res, next) => {
 
 const router = new Router().use((req, res, next) => {
     console.log('i am a route middleware')
-    console.log('query: ', req.query)
 }).get('/user/:id/', (req, res) => {
     res.json({
         id: req.params.id
