@@ -75,7 +75,7 @@ export class Router {
     }
 
     async handle(req: Request, res: Response) {
-        const match = this.match(req.method, req.url)
+        const match = this.match(req.getMethod(), req.getUrl())
         if (!match) {
             throw new Error("Route not found")
         }
@@ -85,4 +85,3 @@ export class Router {
     }
 
 }
-

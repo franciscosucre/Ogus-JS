@@ -30,6 +30,7 @@ server.use(async (req, res, next) => {
 
 const router = new Router().use((req, res, next) => {
     console.log('i am a route middleware')
+    console.log('query: ', req.query)
 }).get('/user/:id/', (req, res) => {
     res.json({
         id: req.params.id

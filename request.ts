@@ -1,42 +1,45 @@
-import {ServerRequest} from "https://deno.land/std/http/server.ts";
-import {decode} from "https://deno.land/std/encoding/utf8.ts";
-
-import {  } from "https://deno.land/std/path/mod.ts";
+import {BaseObject} from "./utility-types.ts"
+import {
+  Status,
+} from "https://deno.land/std@0.119.0/http/http_status.ts";
 
 export class Request {
-    public readonly denoRequest: ServerRequest;
+    private readonly requestEvent: Deno.RequestEvent;
     // Free property to be used for routers
     public params: {[key in string]: unknown} = {}
-    public body = '';
+    public query: {[key in string]: unknown} = {}
 
 
-    constructor({denoRequest}: { denoRequest: ServerRequest }) {
-        this.denoRequest = denoRequest
+    constructor({requestEvent}: { requestEvent: Deno.RequestEvent }) {
+        this.requestEvent = requestEvent
     }
 
-    async fetchBody() {
-        this.body = decode(await Deno.readAll(this.denoRequest.body))
+    jsonBody(): Promise<BaseObject> {
+        return this.requestEvent.request.json()
     }
 
-    get jsonBody() {
-        return this.body ? JSON.parse(this.body): {}
+    getHeader(key: string){
+        return this.getRequest().headers.get(key)
     }
 
-    get contentLength() {
-        return this.denoRequest.contentLength
+    getMethod() {
+        return this.getRequest().method
     }
 
-    get headers() {
-        return this.denoRequest.headers
+    getUrl() {
+        return this.getRequest().url
     }
 
-    get method() {
-        return this.denoRequest.method
+    respond(body: BodyInit, options?: Omit<ResponseInit, 'statusText'>){
+        const {headers, status=Status.OK} = options || {}
+        return this.requestEvent.respondWith(new Response(body, {
+            headers,
+            status,
+        }))
     }
 
-    get url() {
-        return this.denoRequest.url
+    private getRequest(){
+        return this.requestEvent.request
     }
-
 
 }
