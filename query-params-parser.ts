@@ -3,7 +3,7 @@ export type Convertor = {
   convert(valueString: string): any;
 };
 
-export type Primitives = string | number | boolean;
+export type Primitives = string | number | boolean | Date;
 
 export class QueryParamsParser {
     private convertors: Convertor[]
@@ -18,8 +18,8 @@ export class QueryParamsParser {
       convert: (value) => new Number(value),
     },
     {
-      isValidValue: (value: string) => true,
-      convert: (value) => new String(value),
+      isValidValue: (value: string) => !isNaN(new Date(value).getTime()),
+      convert: (value) => new Date(value),
     },
   ]
 
@@ -52,5 +52,6 @@ export class QueryParamsParser {
         return convertor.convert(value);
       }
     }
+    return value
   }
 }
