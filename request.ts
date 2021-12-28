@@ -1,7 +1,7 @@
 import {BaseObject} from "./utility-types.ts"
 import {
   Status,
-} from "https://deno.land/std@0.119.0/http/http_status.ts";
+} from "deno/http/http_status.ts";
 
 export class Request {
     private readonly requestEvent: Deno.RequestEvent;

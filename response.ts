@@ -1,9 +1,7 @@
-import {Request} from "./request.ts";
 import {
   Status,
-} from "https://deno.land/std@0.119.0/http/http_status.ts";
-
-
+} from "deno/http/http_status.ts";
+import {Request} from "./request.ts";
 
 export class Response {
     private request: Request;

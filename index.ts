@@ -1,45 +1,42 @@
-import {Application} from './application.ts';
-import {Router} from "./router/router.ts";
-import {
-  Status,
-} from "https://deno.land/std@0.119.0/http/http_status.ts";
-
+import { Status } from 'deno/http/http_status.ts';
+import { Application } from './application.ts';
+import { Router } from './router/router.ts';
 
 const server = new Application({
-    port: 8000,
-    hostname: "0.0.0.0",
-    requestHandler: (req, res) => router.handle(req, res)
-})
+	port: 8000,
+	hostname: '0.0.0.0',
+	requestHandler: (req, res) => router.handle(req, res),
+});
 
 server.use(async (req, res, next) => {
-    try {
-        if (next) {
-            await next()
-        }
-    } catch (e) {
-        console.error("An error has been handled", e)
-        res.status(Status.InternalServerError).json({
-            error: e.message
-        })
-    }
+	try {
+		if (next) {
+			await next();
+		}
+	} catch (e) {
+		console.error('An error has been handled', e);
+		res.status(Status.InternalServerError).json({
+			error: e.message,
+		});
+	}
 }).use(async (req, res, next) => {
-    if (next) {
-        await next()
-    }
-    console.log("Middleware 1. I Should not appear if an error")
+	if (next) {
+		await next();
+	}
+	console.log('Middleware 1. I Should not appear if an error');
 }).use(async (req, res, next) => {
-    console.log("Middleware 2. I should appear")
-    next ? await next() : null
-})
+	console.log('Middleware 2. I should appear');
+	next ? await next() : null;
+});
 
 const router = new Router().use((req, res, next) => {
-    console.log('i am a route middleware')
+	console.log('i am a route middleware');
 }).get('/user/:id/', (req, res) => {
-    res.json({
-        id: req.params.id
-    })
-})
+	res.json({
+		id: req.params.id,
+	});
+});
 
 await server.listen(() => {
-    console.log(`Listening on http://${server.hostname}:${server.port}`)
-})
+	console.log(`Listening on http://${server.hostname}:${server.port}`);
+});
