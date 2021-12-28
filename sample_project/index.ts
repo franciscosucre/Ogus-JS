@@ -1,6 +1,5 @@
 import { Status } from 'deno/http/http_status.ts';
-import { Application } from './application.ts';
-import { Router } from './router/router.ts';
+import { Application, Router } from 'ogus-js';
 
 const server = new Application({
 	port: 8000,
